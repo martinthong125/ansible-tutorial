@@ -1,3 +1,4 @@
-192.168.1.154
-192.168.1.20
+# hosts
+controller ansible_host=192.168.1.154
+target3 ansible_host=192.168.1.20
 
