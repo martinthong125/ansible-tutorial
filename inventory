@@ -1,4 +1,7 @@
 # hosts
+[loadbalancers]
 controller ansible_host=192.168.1.154
+
+[webservers]
 target3 ansible_host=192.168.1.20
 
