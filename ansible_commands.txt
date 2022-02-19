@@ -1,0 +1,13 @@
+List of ansible commands and its format:
+# Function
+Command to copy
+
+# To list all hosts
+ansible all --list-hosts
+
+# To ping servers
+ansible all -m ping
+
+# To gather info of servers
+ansible all -m gather_facts
+

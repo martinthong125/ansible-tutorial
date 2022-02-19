@@ -1,7 +1,12 @@
 # hosts
+
+[local]
+control ansible_connection=local
+
 [loadbalancers]
 controller ansible_host=192.168.1.154
 
 [webservers]
 target3 ansible_host=192.168.1.20
+
 
