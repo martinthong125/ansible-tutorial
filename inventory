@@ -5,6 +5,7 @@ control ansible_connection=local
 
 [loadbalancers]
 controller ansible_host=192.168.1.154
+# lb1 ansible_host=192.168.1.154 ansible_connection=ssh ansible_user=osboxes ansible_ssh_pass=osboxes.org
 
 [webservers]
 target3 ansible_host=192.168.1.20
