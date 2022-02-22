@@ -1,4 +1,5 @@
 ---
+# run the task only if the distribution is Ubuntu
 - hosts: all
   become: true
   tasks:
@@ -6,11 +7,13 @@
       apt:
         update_cache: yes
       when: ansible_distribution == "Ubuntu"
+
     - name: install apache2 package
       apt:
         name: apache2
         state: latest
       when: ansible_distribution == "Ubuntu"
+
     - name: add php support for apache2
       apt:
         name: libapache2-mod-php

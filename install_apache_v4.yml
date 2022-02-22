@@ -1,0 +1,93 @@
+---
+# Added user ansible
+- hosts: all
+  become: true
+  pre_tasks:
+    - name: intall updates (Ubuntu)s
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install updates (CentOS)
+      dnf:
+        update_only: yes
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+- hosts: all
+  become: true
+  tasks:
+    - name: create user ansible
+      user:
+        name: ansible
+        groups: root
+
+    - name: add ssh key for ansible
+      authorized_key:
+        user: ansible
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCewMd2hcsOUlNsUgMKaQYhrB06dMjicBwLIwwR+ddRlfntc0p5FVKn7NJGKqOUES/3QYZGLZgekX6e6fAjFtWzgAluZq3L57M7jMjP7z4T//TtKvVzPEN9BT0746Qei/LkqVym9KBLZohhz1gRqtbvn5SP8n3Ecl5aEM2FheO+3mKe2FHD/LRIJsRTVluaDFIky94N3hThiEEH+2P/p6huu6cvHrrvVH1n5HnHctBgcEqBItHg2Y95Wo2UzDaeuyry2I0euw7cx7VFm+cVb4EBBr3A3q9JkRbGRCj9Z6aNAluY5f1QQJodBOqWXCqH7oO8Ew/o7yS/Vug5ijVo38/CdTbB8gu3JJ8Fb3J95DK+bw6SNv8jDbdZ5DDqYpZxGSmVdZgU8t/zlLngIEtpOthxCtDXVyBemkb5b9VRgTldrXx707m5VbTGCIZI1H9uwFvg8H/OtRy4XE53T4T4ELU8nzkkLKBnaKA4d5VsuEwFRQTT+kox9178d46yzR2L6iE= martin@Martin-swift3"
+
+    - name: add sudoers file for ansible
+      copy:
+        src: sudoer_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: 0440
+
+- hosts: web_servers
+  become: true
+  tasks:
+    - name: install apache2 and php packages for Ubuntu
+      apt:
+        name:
+          - apache2
+          - libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: start
+      service:
+        name: apache2
+        state: latest
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install apache2 and php packages for CentOS
+      dnf:
+        name:
+          - httpd
+          - php
+        state: latest
+      when: ansible_distribution == "CentOS"
+
+    - name: start httpd (CentOS)
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_distribution == "CentOS"
+
+- hosts: db_servers
+  become: true
+  tasks:
+    - name: install mariadb package (Ubuntu)
+      apt:
+        name: mariadb-server
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install mariadb package (CentOS)
+      dnf:
+        name: mariadb
+        state: latest
+      when: ansible_distribution == "CentOS"
+
+- hosts: file_servers
+  become: true
+  tasks:
+    - name: install samba package
+      package:
+        name: samba
+        state: latest

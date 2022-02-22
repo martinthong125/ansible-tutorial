@@ -2,12 +2,20 @@ List of ansible commands and its format:
 # Function
 Command to copy
 
-# To list all hosts
+# To list all hosts in inventory file
 ansible all --list-hosts
 
-# To ping servers
+# To ping all servers in inventory file
 ansible all -m ping
 
-# To gather info of servers
+# To gather info of all servers in inventory file
 ansible all -m gather_facts
 
+# update installed packages on ubuntu with sudo and password
+ansible all -m apt -a "update=dist" --become --ask-become-pass
+
+# check tags in playbook
+ansible-playbook --list-tags <yml filename>
+
+# run certain tags
+ansible-playbook --tags <tag name> --ask-become-pass <yml filename>
